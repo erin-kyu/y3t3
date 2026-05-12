@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>SYNTAX</title>
+<title>🖥️ SYNTAX</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖥️</text></svg>">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
@@ -11,22 +11,39 @@
   :root {
     --bg: #f7f6f2; --surface: #ffffff; --border: #e4e1d8;
     --text: #1a1917; --muted: #7a7870; --accent: #2d2c2a;
-    --row-h: 44px;
-    --px-hr: 96px;
-    --label-w: 42px;
+    --row-h: 44px; --px-hr: 96px; --label-w: 42px;
   }
   html, body { height: 100%; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 1.25rem 0 4rem; }
 
-  /* Header */
   .header { padding: 0 1rem 1.25rem; display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
   h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
   .subtitle { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
 
-  /* Legend */
-  .legend { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 1rem 1rem; }
-  .leg { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 3px 9px; }
-  .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  /* Legend / person filters */
+  .legend { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 1rem 1rem; align-items: center; }
+  .leg {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 500; color: var(--muted);
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 20px; padding: 4px 10px;
+    cursor: pointer; transition: all .15s ease;
+    user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  .leg:hover { border-color: #bbb8ae; color: var(--text); }
+  .leg.active { color: var(--text); border-color: transparent; }
+  .leg.dimmed { opacity: 0.35; }
+  .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .leg-all {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 20px; padding: 4px 12px;
+    cursor: pointer; transition: all .15s ease;
+    user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  .leg-all:hover { border-color: #bbb8ae; color: var(--text); }
+  .leg-all.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
   /* Day tabs */
   .day-tabs { display: flex; gap: 4px; flex-wrap: nowrap; overflow-x: auto; padding: 0 1rem 0.85rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
@@ -39,89 +56,42 @@
   .card { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
   .day-title { padding: 11px 1rem; font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); background: var(--bg); }
 
-  /* Scrollable grid wrapper */
-  .scroll-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    cursor: grab;
-    user-select: none;
-  }
+  /* Scroll */
+  .scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; cursor: grab; user-select: none; }
   .scroll-wrap:active { cursor: grabbing; }
   .scroll-wrap::-webkit-scrollbar { height: 4px; }
   .scroll-wrap::-webkit-scrollbar-track { background: var(--bg); }
   .scroll-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-  /* Inner grid */
   .grid-inner { display: flex; flex-direction: column; padding: 8px 0 12px; }
 
-  /* Time axis row */
   .time-axis { display: flex; margin-left: var(--label-w); margin-bottom: 6px; }
   .tick { flex: 0 0 var(--px-hr); font-size: 10px; font-weight: 500; color: var(--muted); font-family: 'DM Mono', monospace; border-left: 1px solid var(--border); padding-left: 4px; }
 
-  /* Person rows */
-  .person-row { display: flex; align-items: center; height: var(--row-h); padding: 4px 0; }
+  .person-row { display: flex; align-items: center; padding: 4px 0; transition: opacity .2s; }
+  .person-row.hidden { display: none; }
   .p-label { flex: 0 0 var(--label-w); font-size: 12px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--text); padding-left: 12px; }
-  .timeline { position: relative; height: 100%; }
+  .timeline { position: relative; }
 
-  /* Hour/half grid lines */
   .gl  { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--border); opacity: 0.7; }
   .ghl { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--border); opacity: 0.25; }
 
-  /* Blocks */
   .block {
-    position: absolute;
-    top: 3px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    padding: 0 7px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    overflow: hidden;
-    -webkit-tap-highlight-color: transparent;
-    transition: filter .1s;
+    position: absolute; border-radius: 6px; display: flex; align-items: center;
+    padding: 0 7px; font-size: 11px; font-weight: 600; cursor: pointer;
+    overflow: hidden; -webkit-tap-highlight-color: transparent; transition: filter .1s;
   }
   .block:active { filter: brightness(0.88); }
   .block .bl-inner { overflow: hidden; white-space: nowrap; width: 100%; }
   .block .bl-room { font-size: 9px; font-weight: 400; opacity: 0.65; margin-left: 3px; }
+  .block-async { position: absolute; border-radius: 3px; display: flex; align-items: center; padding: 0 5px; font-size: 9px; font-weight: 500; overflow: hidden; background: #D3D1C7; color: #444441; cursor: pointer; }
 
-  /* Stacked async block */
-  .block-async {
-    position: absolute;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    padding: 0 5px;
-    font-size: 9px;
-    font-weight: 500;
-    overflow: hidden;
-    background: #D3D1C7;
-    color: #444441;
-    cursor: pointer;
-  }
-
-  /* Divider between people */
   .row-divider { height: 1px; background: var(--border); margin-left: var(--label-w); opacity: 0.5; }
 
-  /* Popup overlay */
-  .popup-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.35);
-    z-index: 500;
-    align-items: flex-end;
-    justify-content: center;
-  }
+  /* Popup */
+  .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 500; align-items: flex-end; justify-content: center; }
   .popup-overlay.open { display: flex; }
-  .popup {
-    background: var(--surface);
-    border-radius: 16px 16px 0 0;
-    padding: 20px 20px 36px;
-    width: 100%;
-    max-width: 480px;
-    box-shadow: 0 -4px 32px rgba(0,0,0,0.12);
-  }
+  .popup { background: var(--surface); border-radius: 16px 16px 0 0; padding: 20px 20px 36px; width: 100%; max-width: 480px; box-shadow: 0 -4px 32px rgba(0,0,0,0.12); }
   .popup-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
   .popup-course { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
   .popup-row { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); margin-top: 8px; }
@@ -139,8 +109,8 @@
 <body>
 
 <div class="header">
-  <h1>Y3T3 SYNTAX</h1>
-  <span class="subtitle">CA · AL · GL · BM · BR · EQ</span>
+  <h1>🖥️ Y3T3 SYNTAX</h1>
+  <span class="subtitle">AY 2025–2026</span>
 </div>
 
 <div class="legend" id="legend"></div>
@@ -152,7 +122,6 @@
   <div id="cal"></div>
 </div>
 
-<!-- Tap popup -->
 <div class="popup-overlay" id="popup-overlay" onclick="closePopup(event)">
   <div class="popup" id="popup">
     <div class="popup-handle"></div>
@@ -167,16 +136,19 @@
 <script>
 const PEOPLE = ['CA','AL','GL','BM','BR','EQ'];
 const COLORS = {
-  CA:{bg:'#D6E9FB',text:'#0C447C'},
-  AL:{bg:'#D1EDAF',text:'#27500A'},
-  GL:{bg:'#FADEA0',text:'#633806'},
-  BM:{bg:'#F7CEDF',text:'#72243E'},
-  BR:{bg:'#AEECD8',text:'#085041'},
-  EQ:{bg:'#D8D3F8',text:'#3C3489'}
+  CA:{bg:'#D6E9FB',text:'#0C447C',border:'#A8CFF5'},
+  AL:{bg:'#D1EDAF',text:'#27500A',border:'#AADA7E'},
+  GL:{bg:'#FADEA0',text:'#633806',border:'#F5C84C'},
+  BM:{bg:'#F7CEDF',text:'#72243E',border:'#F0A0BD'},
+  BR:{bg:'#AEECD8',text:'#085041',border:'#72DBBE'},
+  EQ:{bg:'#D8D3F8',text:'#3C3489',border:'#B3ACF3'}
 };
 
 const PX_HR = 96, START = 7, END = 20, TOTAL = END - START;
 const TOTAL_PX = TOTAL * PX_HR;
+
+// Active filter state — all on by default
+let activePeople = new Set(PEOPLE);
 
 function t(h,m){ return h + m/60; }
 function px(h){ return ((h-START)*PX_HR).toFixed(2)+'px'; }
@@ -208,7 +180,7 @@ const DATA = {
       {s:t(14,30),e:t(16,0), c:'LOGDSGN',r:'A904'}
     ],
     BM:[
-      {s:t(7,30), e:t(9,0),  c:'NSSECU2',r:'Online'},
+      {s:t(7,30), e:t(9,0),  c:'NSSECU2',r:'OLC'},
       {s:t(9,30), e:t(12,30),c:'LBYCPG4',r:'V311',note:'Lab · Face to face'},
       {s:t(12,45),e:t(14,15),c:'CALENG1',r:'A905'},
       {s:t(14,30),e:t(16,0), c:'LOGDSGN',r:'A904'}
@@ -229,7 +201,7 @@ const DATA = {
   Tuesday:{
     CA:[
       {s:t(9,15), e:t(10,45),c:'CPECOG1',r:'A904'},
-      {s:t(11,0), e:t(12,30), c:'DATA102', r:'Online', note: 'Online'},
+      {s:t(11,0), e:t(12,30),c:'DATA102',r:'G304B'},
       {s:t(12,45),e:t(14,15),c:'CPEPRAC',r:'A904'},
       {s:t(14,30),e:t(17,30),c:'LBYCPA4',r:'V301',note:'Lab · Face to face'}
     ],
@@ -271,12 +243,12 @@ const DATA = {
     CA:[
       {s:t(11,0), e:t(12,30),c:'DSIGPRO',r:'Online',note:'Online · 2nd meet'},
       {s:t(12,45),e:t(14,15),c:'OCHESAF',r:'Online',note:'Online · 2nd meet'},
-      {s:t(18,0), e:t(19,30),c:'GERIZAL',r:'G209'}
+      {s:t(18,0), e:t(19,30),c:'GERIZAL',r:'Online'}
     ],
     AL:[
       {s:t(11,0), e:t(12,30),c:'DSIGPRO',r:'Online',note:'Online · 2nd meet'},
       {s:t(12,45),e:t(14,15),c:'OCHESAF',r:'Online',note:'Online · 2nd meet'},
-      {s:t(18,0), e:t(19,30),c:'GERIZAL',r:'G209'}
+      {s:t(18,0), e:t(19,30),c:'GERIZAL',r:'Online'}
     ],
     GL:[
       {s:t(9,15), e:t(10,45),c:'CALENG3',r:'Online',note:'Online · 2nd meet'},
@@ -284,7 +256,7 @@ const DATA = {
       {s:t(14,30),e:t(16,0), c:'SAS3000',r:'Async',note:'Asynchronous',stack:true}
     ],
     BM:[
-      {s:t(7,30), e:t(9,0),  c:'NSSECU2',r:'V304',note: 'Face to Face · 2nd meet'},
+      {s:t(7,30), e:t(9,0),  c:'NSSECU2',r:'V304',note:'Face to Face · 2nd meet'},
       {s:t(12,45),e:t(14,15),c:'CALENG1',r:'Online',note:'Online · 2nd meet'},
       {s:t(14,30),e:t(16,0), c:'LOGDSGN',r:'Online',note:'Online · 2nd meet'}
     ],
@@ -302,7 +274,7 @@ const DATA = {
   Friday:{
     CA:[
       {s:t(9,15), e:t(10,45),c:'CPECOG1',r:'Online',note:'Online · 2nd meet'},
-      {s:t(11,0), e:t(12,30), c:'DATA102', r:'GK404B', note: 'Face to Face · 2nd meet'},
+      {s:t(11,0), e:t(12,30),c:'DATA102',r:'G404B',note:'Face to Face · 2nd meet'},
       {s:t(12,45),e:t(14,15),c:'CPEPRAC',r:'Online',note:'Online · 2nd meet'},
       {s:t(15,30),e:t(17,30),c:'LCLSTRI',r:'Online',note:'Online · 1x/week'}
     ],
@@ -312,7 +284,7 @@ const DATA = {
       {s:t(11,0), e:t(12,30),c:'CPEPRAC',r:'Online',note:'Online · 2nd meet'},
       {s:t(12,45),e:t(14,15),c:'FINSTAD',r:'Online',note:'Online · 2nd meet'},
       {s:t(15,30),e:t(17,30),c:'LCLSTRI',r:'Online',note:'Online · 1x/week'},
-      {s:t(18,0), e:t(19,30),c:'LCASEAN',r:'Online'}
+      {s:t(18,0), e:t(19,30),c:'LCASEAN',r:'L216'}
     ],
     GL:[
       {s:t(9,15), e:t(10,45),c:'MXSIGFN',r:'Online',note:'Online · 2nd meet'}
@@ -344,7 +316,9 @@ const DATA = {
 const DAYS = Object.keys(DATA);
 let activeDay = 'Monday';
 
-function hasAny(day){ return PEOPLE.some(p=>DATA[day][p]&&DATA[day][p].length>0); }
+function hasAny(day){
+  return PEOPLE.some(p => activePeople.has(p) && DATA[day][p] && DATA[day][p].length > 0);
+}
 
 function showPopup(course, room, timeStr, note){
   document.getElementById('pop-course').textContent = course;
@@ -363,19 +337,56 @@ function showPopup(course, room, timeStr, note){
 }
 
 function closePopup(e){
-  if(!e || e.target===document.getElementById('popup-overlay') || e.currentTarget.classList.contains('popup-close')){
+  if(!e || e.target===document.getElementById('popup-overlay')){
     document.getElementById('popup-overlay').classList.remove('open');
   }
+}
+
+function updateLegendUI(){
+  const allActive = activePeople.size === PEOPLE.length;
+  document.getElementById('leg-all').classList.toggle('active', allActive);
+  PEOPLE.forEach(p => {
+    const el = document.getElementById('leg-'+p);
+    const isActive = activePeople.has(p);
+    el.classList.toggle('active', isActive);
+    el.classList.toggle('dimmed', !isActive);
+  });
+}
+
+function applyFilter(){
+  updateLegendUI();
+  // Show/hide rows
+  PEOPLE.forEach(p => {
+    const rows = document.querySelectorAll(`.person-row[data-person="${p}"]`);
+    const divs = document.querySelectorAll(`.row-divider[data-person="${p}"]`);
+    rows.forEach(r => r.classList.toggle('hidden', !activePeople.has(p)));
+    divs.forEach(d => d.classList.toggle('hidden', !activePeople.has(p)));
+  });
+}
+
+function togglePerson(p){
+  if(activePeople.size === PEOPLE.length){
+    // Currently all on — switch to solo mode for this person
+    activePeople = new Set([p]);
+  } else if(activePeople.has(p) && activePeople.size === 1){
+    // Tapping the only active one — go back to all
+    activePeople = new Set(PEOPLE);
+  } else if(activePeople.has(p)){
+    activePeople.delete(p);
+  } else {
+    activePeople.add(p);
+  }
+  applyFilter();
+}
+
+function toggleAll(){
+  activePeople = new Set(PEOPLE);
+  applyFilter();
 }
 
 function render(day){
   document.getElementById('day-title').textContent = day;
   const cal = document.getElementById('cal');
-
-  if(!hasAny(day)){
-    cal.innerHTML='<div class="free-msg">Everyone is free today 🎉</div>';
-    return;
-  }
 
   // Time axis
   let axisHTML = `<div class="time-axis">`;
@@ -386,30 +397,28 @@ function render(day){
   axisHTML += '</div>';
 
   let rowsHTML = '';
-  PEOPLE.forEach((p,i)=>{
+  PEOPLE.forEach((p, i) => {
     const col = COLORS[p];
     const blocks = DATA[day][p]||[];
     const normal = blocks.filter(b=>!b.stack);
     const stacked = blocks.filter(b=>b.stack);
     const hasStack = stacked.length > 0;
+    const rowH = hasStack ? 52 : 44;
+    const blockH = hasStack ? 22 : 38;
 
-    // grid lines
     let lines = '';
     for(let h=START; h<=END; h++){
       lines += `<div class="gl" style="left:${(h-START)*PX_HR}px"></div>`;
       if(h<END) lines += `<div class="ghl" style="left:${(h-START+0.5)*PX_HR}px"></div>`;
     }
 
-    const rowH = hasStack ? 52 : 44;
-    const blockH = hasStack ? 22 : 38;
-
     let bHTML = normal.map(bl=>{
-      const durPx = (bl.e-bl.s)*PX_HR;
-      const hasOverlap = stacked.some(s=>s.s<bl.e&&s.e>bl.s);
-      const bh = hasOverlap ? blockH : (hasStack ? blockH : 38);
-      let label = '';
-      if(durPx >= 100) label = `${bl.c}<span class="bl-room">${bl.r}</span>`;
-      else if(durPx >= 48) label = bl.c;
+      const durPx=(bl.e-bl.s)*PX_HR;
+      const hasOverlap=stacked.some(s=>s.s<bl.e&&s.e>bl.s);
+      const bh=hasOverlap?blockH:(hasStack?blockH:38);
+      let label='';
+      if(durPx>=100) label=`${bl.c}<span class="bl-room">${bl.r}</span>`;
+      else if(durPx>=48) label=bl.c;
       return `<div class="block" style="left:${px(bl.s)};width:${wpx(bl.s,bl.e)};height:${bh}px;background:${col.bg};color:${col.text};top:3px"
         onclick="showPopup('${bl.c}','${bl.r}','${fmtH(bl.s)} – ${fmtH(bl.e)}','${bl.note||''}')">
         <div class="bl-inner">${label}</div>
@@ -418,26 +427,29 @@ function render(day){
 
     bHTML += stacked.map(bl=>{
       const durPx=(bl.e-bl.s)*PX_HR;
-      const label = durPx>=48?bl.c:'';
+      const label=durPx>=48?bl.c:'';
       return `<div class="block-async" style="left:${px(bl.s)};width:${wpx(bl.s,bl.e)};height:14px;top:${blockH+6}px"
         onclick="showPopup('${bl.c}','${bl.r}','${fmtH(bl.s)} – ${fmtH(bl.e)}','${bl.note||''}')">
         ${label}
       </div>`;
     }).join('');
 
+    const hidden = !activePeople.has(p) ? ' hidden' : '';
     rowsHTML += `
-      <div class="person-row" style="height:${rowH}px">
+      <div class="person-row${hidden}" data-person="${p}" style="height:${rowH}px">
         <div class="p-label">${p}</div>
         <div class="timeline" style="width:${TOTAL_PX}px;height:${rowH}px">
           ${lines}${bHTML}
         </div>
       </div>`;
-    if(i<PEOPLE.length-1) rowsHTML+=`<div class="row-divider"></div>`;
+    if(i < PEOPLE.length-1){
+      rowsHTML += `<div class="row-divider${hidden}" data-person="${p}"></div>`;
+    }
   });
 
-  cal.innerHTML = `<div class="scroll-wrap"><div class="grid-inner" style="min-width:${TOTAL_PX+parseInt(getComputedStyle(document.documentElement).getPropertyValue('--label-w')||42)}px">${axisHTML}${rowsHTML}</div></div>`;
+  cal.innerHTML = `<div class="scroll-wrap"><div class="grid-inner" style="min-width:${TOTAL_PX+42}px">${axisHTML}${rowsHTML}</div></div>`;
 
-  // Touch drag scroll
+  // Mouse drag scroll
   const sw = cal.querySelector('.scroll-wrap');
   let isDown=false, startX=0, scrollLeft=0;
   sw.addEventListener('mousedown',e=>{isDown=true;startX=e.pageX-sw.offsetLeft;scrollLeft=sw.scrollLeft;});
@@ -446,23 +458,40 @@ function render(day){
   sw.addEventListener('mousemove',e=>{if(!isDown)return;e.preventDefault();const x=e.pageX-sw.offsetLeft;sw.scrollLeft=scrollLeft-(x-startX);});
 }
 
-// Legend
+// Build legend
 const legEl = document.getElementById('legend');
-PEOPLE.forEach(p=>{
-  const c=COLORS[p];
-  legEl.innerHTML+=`<div class="leg"><div class="leg-dot" style="background:${c.bg};border:1.5px solid ${c.text}55"></div>${p}</div>`;
+
+// ALL button
+const allBtn = document.createElement('div');
+allBtn.className = 'leg-all active';
+allBtn.id = 'leg-all';
+allBtn.textContent = 'ALL';
+allBtn.onclick = toggleAll;
+legEl.appendChild(allBtn);
+
+// Per-person buttons
+PEOPLE.forEach(p => {
+  const c = COLORS[p];
+  const el = document.createElement('div');
+  el.className = 'leg active';
+  el.id = 'leg-'+p;
+  el.style.borderColor = c.border;
+  el.style.background = c.bg+'55';
+  el.innerHTML = `<div class="leg-dot" style="background:${c.bg};border:1.5px solid ${c.border}"></div>${p}`;
+  el.onclick = () => togglePerson(p);
+  legEl.appendChild(el);
 });
 
-// Tabs
+// Build tabs
 const tabsEl = document.getElementById('tabs');
-DAYS.forEach(d=>{
-  const btn=document.createElement('button');
-  btn.className='tab'+(d===activeDay?' active':'');
-  btn.textContent=d;
-  btn.onclick=()=>{
+DAYS.forEach(d => {
+  const btn = document.createElement('button');
+  btn.className = 'tab'+(d===activeDay?' active':'');
+  btn.textContent = d;
+  btn.onclick = () => {
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
     btn.classList.add('active');
-    activeDay=d;
+    activeDay = d;
     render(d);
   };
   tabsEl.appendChild(btn);
