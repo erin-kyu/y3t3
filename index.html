@@ -20,7 +20,6 @@
   h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
   .subtitle { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
 
-  /* Legend / person filters */
   .legend { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 1rem 1rem; align-items: center; }
   .leg {
     display: flex; align-items: center; gap: 5px;
@@ -45,18 +44,15 @@
   .leg-all:hover { border-color: #bbb8ae; color: var(--text); }
   .leg-all.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-  /* Day tabs */
   .day-tabs { display: flex; gap: 4px; flex-wrap: nowrap; overflow-x: auto; padding: 0 1rem 0.85rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .day-tabs::-webkit-scrollbar { display: none; }
   .tab { flex-shrink: 0; padding: 7px 14px; border: 1px solid var(--border); border-radius: 20px; background: var(--surface); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all .15s ease; white-space: nowrap; }
   .tab:hover { border-color: #bbb8ae; color: var(--text); }
   .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-  /* Card */
   .card { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
   .day-title { padding: 11px 1rem; font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); background: var(--bg); }
 
-  /* Scroll */
   .scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; cursor: grab; user-select: none; }
   .scroll-wrap:active { cursor: grabbing; }
   .scroll-wrap::-webkit-scrollbar { height: 4px; }
@@ -87,8 +83,8 @@
   .block-async { position: absolute; border-radius: 3px; display: flex; align-items: center; padding: 0 5px; font-size: 9px; font-weight: 500; overflow: hidden; background: #D3D1C7; color: #444441; cursor: pointer; }
 
   .row-divider { height: 1px; background: var(--border); margin-left: var(--label-w); opacity: 0.5; }
+  .row-divider.hidden { display: none; }
 
-  /* Popup */
   .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 500; align-items: flex-end; justify-content: center; }
   .popup-overlay.open { display: flex; }
   .popup { background: var(--surface); border-radius: 16px 16px 0 0; padding: 20px 20px 36px; width: 100%; max-width: 480px; box-shadow: 0 -4px 32px rgba(0,0,0,0.12); }
@@ -100,6 +96,7 @@
   .badge-online { background: #E6F1FB; color: #185FA5; }
   .badge-lab    { background: #EAF3DE; color: #3B6D11; }
   .badge-async  { background: #F1EFE8; color: #5F5E5A; }
+  .badge-f2f    { background: #FFF3E0; color: #7C4A00; }
   .popup-close { margin-top: 16px; width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: none; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--muted); cursor: pointer; }
 
   .free-msg { padding: 28px 1rem; font-size: 13px; color: var(--muted); text-align: center; font-style: italic; }
@@ -147,7 +144,6 @@ const COLORS = {
 const PX_HR = 96, START = 7, END = 20, TOTAL = END - START;
 const TOTAL_PX = TOTAL * PX_HR;
 
-// Active filter state — all on by default
 let activePeople = new Set(PEOPLE);
 
 function t(h,m){ return h + m/60; }
@@ -164,152 +160,152 @@ function fmtH(h){
 const DATA = {
   Monday:{
     CA:[
-      {s:t(11,0), e:t(12,30),c:'DSIGPRO',r:'A111'},
-      {s:t(12,45),e:t(14,15),c:'OCHESAF',r:'G207'},
-      {s:t(14,30),e:t(17,30),c:'LBYCPF3',r:'V312',note:'Lab · Face to face'},
-      {s:t(18,0), e:t(19,30),c:'GERIZAL',r:'G209'}
+      {s:t(11,0), e:t(12,30), c:'DSIGPRO', r:'A111'},
+      {s:t(12,45),e:t(14,15), c:'OCHESAF', r:'G207'},
+      {s:t(14,30),e:t(17,30), c:'LBYCPF3', r:'V312', note:'Lab · Face to face'},
+      {s:t(18,0), e:t(19,30), c:'GERIZAL', r:'G209'}
     ],
     AL:[
-      {s:t(11,0), e:t(12,30),c:'DSIGPRO',r:'A111'},
-      {s:t(12,45),e:t(14,15),c:'OCHESAF',r:'G207'},
-      {s:t(14,30),e:t(17,30),c:'LBYCPF3',r:'V312',note:'Lab · Face to face'},
-      {s:t(18,0), e:t(19,30),c:'GERIZAL',r:'G209'}
+      {s:t(11,0), e:t(12,30), c:'DSIGPRO', r:'A111'},
+      {s:t(12,45),e:t(14,15), c:'OCHESAF', r:'G207'},
+      {s:t(14,30),e:t(17,30), c:'LBYCPF3', r:'V312', note:'Lab · Face to face'},
+      {s:t(18,0), e:t(19,30), c:'GERIZAL', r:'G209'}
     ],
     GL:[
-      {s:t(9,15), e:t(10,45),c:'CALENG3',r:'A905'},
-      {s:t(14,30),e:t(16,0), c:'LOGDSGN',r:'A904'}
+      {s:t(9,15), e:t(10,45), c:'CALENG3', r:'A905'},
+      {s:t(14,30),e:t(16,0),  c:'LOGDSGN', r:'A904'}
     ],
     BM:[
-      {s:t(7,30), e:t(9,0),  c:'NSSECU2',r:'OLC'},
-      {s:t(9,30), e:t(12,30),c:'LBYCPG4',r:'V311',note:'Lab · Face to face'},
-      {s:t(12,45),e:t(14,15),c:'CALENG1',r:'A905'},
-      {s:t(14,30),e:t(16,0), c:'LOGDSGN',r:'A904'}
+      {s:t(7,30), e:t(9,0),   c:'NSSECU2', r:'OLC'},
+      {s:t(9,30), e:t(12,30), c:'LBYCPG4', r:'V311', note:'Lab · Face to face'},
+      {s:t(12,45),e:t(14,15), c:'CALENG1', r:'A905'},
+      {s:t(14,30),e:t(16,0),  c:'LOGDSGN', r:'A904'}
     ],
     BR:[
-      {s:t(11,0), e:t(12,30),c:'DSIGPRO',r:'A111'},
-      {s:t(12,45),e:t(14,15),c:'OCHESAF',r:'G207'},
-      {s:t(14,30),e:t(17,30),c:'LBYCPF3',r:'V312',note:'Lab · Face to face'},
-      {s:t(18,0), e:t(19,30),c:'GERIZAL',r:'G209'}
+      {s:t(11,0), e:t(12,30), c:'DSIGPRO', r:'A111'},
+      {s:t(12,45),e:t(14,15), c:'OCHESAF', r:'G207'},
+      {s:t(14,30),e:t(17,30), c:'LBYCPF3', r:'V312', note:'Lab · Face to face'},
+      {s:t(18,0), e:t(19,30), c:'GERIZAL', r:'G209'}
     ],
     EQ:[
-      {s:t(7,30), e:t(9,0),  c:'NUMMETS',r:'SJ109'},
-      {s:t(9,30), e:t(12,30),c:'LBYCPG4',r:'V311',note:'Lab · Face to face'},
-      {s:t(14,30),e:t(16,0), c:'LOGDSGN',r:'A904'},
-      {s:t(18,0), e:t(19,30),c:'GERIZAL',r:'G209'}
+      {s:t(7,30), e:t(9,0),   c:'NUMMETS', r:'SJ109'},
+      {s:t(9,30), e:t(12,30), c:'LBYCPG4', r:'V311', note:'Lab · Face to face'},
+      {s:t(14,30),e:t(16,0),  c:'LOGDSGN', r:'A904'},
+      {s:t(18,0), e:t(19,30), c:'GERIZAL', r:'G209'}
     ]
   },
   Tuesday:{
     CA:[
-      {s:t(9,15), e:t(10,45),c:'CPECOG1',r:'A904'},
-      {s:t(11,0), e:t(12,30),c:'DATA102',r:'G304B'},
-      {s:t(12,45),e:t(14,15),c:'CPEPRAC',r:'A904'},
-      {s:t(14,30),e:t(17,30),c:'LBYCPA4',r:'V301',note:'Lab · Face to face'}
+      {s:t(9,15), e:t(10,45), c:'CPECOG1', r:'A904'},
+      {s:t(11,0), e:t(12,30), c:'DATA102', r:'G304B'},
+      {s:t(12,45),e:t(14,15), c:'CPEPRAC', r:'A904'},
+      {s:t(14,30),e:t(17,30), c:'LBYCPA4', r:'V301', note:'Lab · Face to face'}
     ],
     AL:[
-      {s:t(7,30), e:t(9,0),  c:'ENGMANA',r:'G207'},
-      {s:t(9,15), e:t(10,45),c:'CPECOG1',r:'A904'},
-      {s:t(11,0), e:t(12,30),c:'CPEPRAC',r:'A904'},
-      {s:t(12,45),e:t(14,15),c:'FINSTAD',r:'G101'},
-      {s:t(14,30),e:t(17,30),c:'LBYCPA4',r:'V301',note:'Lab · Face to face'},
-      {s:t(18,0), e:t(19,30),c:'LCASEAN',r:'L216'}
+      {s:t(7,30), e:t(9,0),   c:'ENGMANA', r:'G207'},
+      {s:t(9,15), e:t(10,45), c:'CPECOG1', r:'A904'},
+      {s:t(11,0), e:t(12,30), c:'CPEPRAC', r:'A904'},
+      {s:t(12,45),e:t(14,15), c:'FINSTAD', r:'G101'},
+      {s:t(14,30),e:t(17,30), c:'LBYCPA4', r:'V301', note:'Lab · Face to face'},
+      {s:t(18,0), e:t(19,30), c:'LCASEAN', r:'L216'}
     ],
     GL:[
-      {s:t(9,15), e:t(10,45),c:'MXSIGFN',r:'A1101'}
-      {s:t(14,30),e:t(17,30),c:'LBYCPC3',r:'TBA',note:'Lab · Face to face'}
+      {s:t(9,15), e:t(10,45), c:'MXSIGFN', r:'A1101'},
+      {s:t(14,30),e:t(17,30), c:'LBYCPC3', r:'TBA', note:'Lab · Face to face'}
     ],
     BM:[
-      {s:t(9,15), e:t(10,45),c:'MXSIGFN',r:'A1101'},
-      {s:t(16,15),e:t(17,45),c:'ECNOMIC',r:'G203'}
+      {s:t(9,15), e:t(10,45), c:'MXSIGFN', r:'A1101'},
+      {s:t(16,15),e:t(17,45), c:'ECNOMIC', r:'G203'}
     ],
     BR:[
-      {s:t(7,30), e:t(10,30),c:'LBYCPA4',r:'V205',note:'Lab · Face to face'},
-      {s:t(11,0), e:t(12,30),c:'CPEPRAC',r:'A904'},
-      {s:t(12,45),e:t(14,15),c:'FINSTAD',r:'G101'},
-      {s:t(14,30),e:t(16,0), c:'CPECOG1',r:'A904'},
+      {s:t(7,30), e:t(10,30), c:'LBYCPA4', r:'V205', note:'Lab · Face to face'},
+      {s:t(11,0), e:t(12,30), c:'CPEPRAC', r:'A904'},
+      {s:t(12,45),e:t(14,15), c:'FINSTAD', r:'G101'},
+      {s:t(14,30),e:t(16,0),  c:'CPECOG1', r:'A904'}
     ],
     EQ:[
-      {s:t(9,15), e:t(10,45),c:'MXSIGFN',r:'A1101'},
-      {s:t(12,45),e:t(14,15),c:'FINSTAD',r:'G101'},
-      {s:t(16,15),e:t(17,45),c:'ECNOMIC',r:'G203'}
+      {s:t(9,15), e:t(10,45), c:'MXSIGFN', r:'A1101'},
+      {s:t(12,45),e:t(14,15), c:'FINSTAD', r:'G101'},
+      {s:t(16,15),e:t(17,45), c:'ECNOMIC', r:'G203'}
     ]
   },
   Wednesday:{
     CA:[], AL:[],
-    GL:[{s:t(7,30),e:t(9,30),c:'LCLSTRI',r:'Online',note:'Online · 1x/week'}],
-    BM:[{s:t(7,30),e:t(9,30),c:'LCLSTRI',r:'Online',note:'Online · 1x/week'}],
-    BR:[{s:t(7,30),e:t(9,30),c:'LCLSTRI',r:'Online',note:'Online · 1x/week'}],
-    EQ:[{s:t(7,30),e:t(9,30),c:'LCLSTRI',r:'Online',note:'Online · 1x/week'}]
+    GL:[{s:t(7,30),e:t(9,30), c:'LCLSTRI', r:'Online', note:'Online · 1x/week'}],
+    BM:[{s:t(7,30),e:t(9,30), c:'LCLSTRI', r:'Online', note:'Online · 1x/week'}],
+    BR:[{s:t(7,30),e:t(9,30), c:'LCLSTRI', r:'Online', note:'Online · 1x/week'}],
+    EQ:[{s:t(7,30),e:t(9,30), c:'LCLSTRI', r:'Online', note:'Online · 1x/week'}]
   },
   Thursday:{
     CA:[
-      {s:t(11,0), e:t(12,30),c:'DSIGPRO',r:'Online',note:'Online · 2nd meet'},
-      {s:t(12,45),e:t(14,15),c:'OCHESAF',r:'Online',note:'Online · 2nd meet'},
-      {s:t(18,0), e:t(19,30),c:'GERIZAL',r:'Online'}
+      {s:t(11,0), e:t(12,30), c:'DSIGPRO', r:'Online', note:'Online · 2nd meet'},
+      {s:t(12,45),e:t(14,15), c:'OCHESAF', r:'Online', note:'Online · 2nd meet'},
+      {s:t(18,0), e:t(19,30), c:'GERIZAL', r:'Online', note:'Online · 2nd meet'}
     ],
     AL:[
-      {s:t(11,0), e:t(12,30),c:'DSIGPRO',r:'Online',note:'Online · 2nd meet'},
-      {s:t(12,45),e:t(14,15),c:'OCHESAF',r:'Online',note:'Online · 2nd meet'},
-      {s:t(18,0), e:t(19,30),c:'GERIZAL',r:'Online'}
+      {s:t(11,0), e:t(12,30), c:'DSIGPRO', r:'Online', note:'Online · 2nd meet'},
+      {s:t(12,45),e:t(14,15), c:'OCHESAF', r:'Online', note:'Online · 2nd meet'},
+      {s:t(18,0), e:t(19,30), c:'GERIZAL', r:'Online', note:'Online · 2nd meet'}
     ],
     GL:[
-      {s:t(9,15), e:t(10,45),c:'CALENG3',r:'Online',note:'Online · 2nd meet'},
-      {s:t(14,30),e:t(16,0), c:'LOGDSGN',r:'Online',note:'Online · 2nd meet'},
-      {s:t(14,30),e:t(16,0), c:'SAS3000',r:'Async',note:'Asynchronous',stack:true}
+      {s:t(9,15), e:t(10,45), c:'CALENG3', r:'Online', note:'Online · 2nd meet'},
+      {s:t(14,30),e:t(16,0),  c:'LOGDSGN', r:'Online', note:'Online · 2nd meet'},
+      {s:t(14,30),e:t(16,0),  c:'SAS3000', r:'Async',  note:'Asynchronous', stack:true}
     ],
     BM:[
-      {s:t(7,30), e:t(9,0),  c:'NSSECU2',r:'V304',note:'Face to Face · 2nd meet'},
-      {s:t(12,45),e:t(14,15),c:'CALENG1',r:'Online',note:'Online · 2nd meet'},
-      {s:t(14,30),e:t(16,0), c:'LOGDSGN',r:'Online',note:'Online · 2nd meet'}
+      {s:t(7,30), e:t(9,0),   c:'NSSECU2', r:'V304', note:'Face to face · 2nd meet'},
+      {s:t(12,45),e:t(14,15), c:'CALENG1', r:'Online', note:'Online · 2nd meet'},
+      {s:t(14,30),e:t(16,0),  c:'LOGDSGN', r:'Online', note:'Online · 2nd meet'}
     ],
     BR:[
-      {s:t(11,0), e:t(12,30),c:'DSIGPRO',r:'Online',note:'Online · 2nd meet'},
-      {s:t(12,45),e:t(14,15),c:'OCHESAF',r:'Online',note:'Online · 2nd meet'},
-      {s:t(18,0), e:t(19,30),c:'GERIZAL',r:'G209'}
+      {s:t(11,0), e:t(12,30), c:'DSIGPRO', r:'Online', note:'Online · 2nd meet'},
+      {s:t(12,45),e:t(14,15), c:'OCHESAF', r:'Online', note:'Online · 2nd meet'},
+      {s:t(18,0), e:t(19,30), c:'GERIZAL', r:'G209'}
     ],
     EQ:[
-      {s:t(7,30), e:t(9,0),  c:'NUMMETS',r:'Online'},
-      {s:t(14,30),e:t(16,0), c:'LOGDSGN',r:'Online',note:'Online · 2nd meet'},
-      {s:t(18,0), e:t(19,30),c:'GERIZAL',r:'Online'}
+      {s:t(7,30), e:t(9,0),   c:'NUMMETS', r:'Online'},
+      {s:t(14,30),e:t(16,0),  c:'LOGDSGN', r:'Online', note:'Online · 2nd meet'},
+      {s:t(18,0), e:t(19,30), c:'GERIZAL', r:'Online', note:'Online · 2nd meet'}
     ]
   },
   Friday:{
     CA:[
-      {s:t(9,15), e:t(10,45),c:'CPECOG1',r:'Online',note:'Online · 2nd meet'},
-      {s:t(11,0), e:t(12,30),c:'DATA102',r:'G404B',note:'Face to Face · 2nd meet'},
-      {s:t(12,45),e:t(14,15),c:'CPEPRAC',r:'Online',note:'Online · 2nd meet'},
-      {s:t(15,30),e:t(17,30),c:'LCLSTRI',r:'Online',note:'Online · 1x/week'}
+      {s:t(9,15), e:t(10,45), c:'CPECOG1', r:'Online', note:'Online · 2nd meet'},
+      {s:t(11,0), e:t(12,30), c:'DATA102', r:'G404B',  note:'Face to face · 2nd meet'},
+      {s:t(12,45),e:t(14,15), c:'CPEPRAC', r:'Online', note:'Online · 2nd meet'},
+      {s:t(15,30),e:t(17,30), c:'LCLSTRI', r:'Online', note:'Online · 1x/week'}
     ],
     AL:[
-      {s:t(7,30), e:t(9,0),  c:'ENGMANA',r:'Online',note:'Online · 2nd meet'},
-      {s:t(9,15), e:t(10,45),c:'CPECOG1',r:'Online',note:'Online · 2nd meet'},
-      {s:t(11,0), e:t(12,30),c:'CPEPRAC',r:'Online',note:'Online · 2nd meet'},
-      {s:t(12,45),e:t(14,15),c:'FINSTAD',r:'Online',note:'Online · 2nd meet'},
-      {s:t(15,30),e:t(17,30),c:'LCLSTRI',r:'Online',note:'Online · 1x/week'},
-      {s:t(18,0), e:t(19,30),c:'LCASEAN',r:'L216'}
+      {s:t(7,30), e:t(9,0),   c:'ENGMANA', r:'Online', note:'Online · 2nd meet'},
+      {s:t(9,15), e:t(10,45), c:'CPECOG1', r:'Online', note:'Online · 2nd meet'},
+      {s:t(11,0), e:t(12,30), c:'CPEPRAC', r:'Online', note:'Online · 2nd meet'},
+      {s:t(12,45),e:t(14,15), c:'FINSTAD', r:'Online', note:'Online · 2nd meet'},
+      {s:t(15,30),e:t(17,30), c:'LCLSTRI', r:'Online', note:'Online · 1x/week'},
+      {s:t(18,0), e:t(19,30), c:'LCASEAN', r:'L216'}
     ],
     GL:[
-      {s:t(9,15), e:t(10,45),c:'MXSIGFN',r:'Online',note:'Online · 2nd meet'}
+      {s:t(9,15), e:t(10,45), c:'MXSIGFN', r:'Online', note:'Online · 2nd meet'}
     ],
     BM:[
-      {s:t(9,15), e:t(10,45),c:'MXSIGFN',r:'Online',note:'Online · 2nd meet'},
-      {s:t(16,15),e:t(17,45),c:'ECNOMIC',r:'Online',note:'Online · 2nd meet'}
+      {s:t(9,15), e:t(10,45), c:'MXSIGFN', r:'Online', note:'Online · 2nd meet'},
+      {s:t(16,15),e:t(17,45), c:'ECNOMIC', r:'Online', note:'Online · 2nd meet'}
     ],
     BR:[
-      {s:t(11,0), e:t(12,30),c:'CPEPRAC',r:'Online',note:'Online · 2nd meet'},
-      {s:t(12,45),e:t(14,15),c:'FINSTAD',r:'Online',note:'Online · 2nd meet'},
-      {s:t(14,30),e:t(16,0), c:'CPECOG1',r:'Online',note:'Online · 2nd meet'},
+      {s:t(11,0), e:t(12,30), c:'CPEPRAC', r:'Online', note:'Online · 2nd meet'},
+      {s:t(12,45),e:t(14,15), c:'FINSTAD', r:'Online', note:'Online · 2nd meet'},
+      {s:t(14,30),e:t(16,0),  c:'CPECOG1', r:'Online', note:'Online · 2nd meet'}
     ],
     EQ:[
-      {s:t(9,15), e:t(10,45),c:'MXSIGFN',r:'Online',note:'Online · 2nd meet'},
-      {s:t(12,45),e:t(14,15),c:'FINSTAD',r:'Online',note:'Online · 2nd meet'},
-      {s:t(16,15),e:t(17,45),c:'ECNOMIC',r:'Online',note:'Online · 2nd meet'}
+      {s:t(9,15), e:t(10,45), c:'MXSIGFN', r:'Online', note:'Online · 2nd meet'},
+      {s:t(12,45),e:t(14,15), c:'FINSTAD', r:'Online', note:'Online · 2nd meet'},
+      {s:t(16,15),e:t(17,45), c:'ECNOMIC', r:'Online', note:'Online · 2nd meet'}
     ]
   },
   Saturday:{
-    CA:[{s:t(18,0),e:t(19,30),c:'THSCP4A',r:'TBA',note:'Placeholder'}],
-    AL:[{s:t(18,0),e:t(19,30),c:'THSCP4A',r:'TBA',note:'Placeholder'}],
+    CA:[{s:t(18,0),e:t(19,30), c:'THSCP4A', r:'TBA', note:'Placeholder'}],
+    AL:[{s:t(18,0),e:t(19,30), c:'THSCP4A', r:'TBA', note:'Placeholder'}],
     GL:[], BM:[],
-    BR:[{s:t(18,0),e:t(19,30),c:'THSCP4A',r:'TBA',note:'Placeholder'}],
+    BR:[{s:t(18,0),e:t(19,30), c:'THSCP4A', r:'TBA', note:'Placeholder'}],
     EQ:[]
   }
 };
@@ -328,10 +324,11 @@ function showPopup(course, room, timeStr, note){
   const badge = document.getElementById('pop-badge');
   if(note){
     let cls='', label='';
-    if(note.includes('Lab')){ cls='badge-lab'; label='🧪 '+note; }
-    else if(note.includes('Async')){ cls='badge-async'; label='⏸ '+note; }
-    else if(note.includes('Online')){ cls='badge-online'; label='💻 '+note; }
-    else { cls='badge-async'; label=note; }
+    if(note.includes('Lab'))          { cls='badge-lab';    label='🧪 '+note; }
+    else if(note.includes('Async'))   { cls='badge-async';  label='⏸ '+note; }
+    else if(note.includes('Face to face')) { cls='badge-f2f'; label='🏫 '+note; }
+    else if(note.includes('Online'))  { cls='badge-online'; label='💻 '+note; }
+    else                              { cls='badge-async';  label=note; }
     badge.innerHTML = `<span class="popup-badge ${cls}">${label}</span>`;
   } else { badge.innerHTML=''; }
   document.getElementById('popup-overlay').classList.add('open');
@@ -356,7 +353,6 @@ function updateLegendUI(){
 
 function applyFilter(){
   updateLegendUI();
-  // Show/hide rows
   PEOPLE.forEach(p => {
     const rows = document.querySelectorAll(`.person-row[data-person="${p}"]`);
     const divs = document.querySelectorAll(`.row-divider[data-person="${p}"]`);
@@ -367,10 +363,8 @@ function applyFilter(){
 
 function togglePerson(p){
   if(activePeople.size === PEOPLE.length){
-    // Currently all on — switch to solo mode for this person
     activePeople = new Set([p]);
   } else if(activePeople.has(p) && activePeople.size === 1){
-    // Tapping the only active one — go back to all
     activePeople = new Set(PEOPLE);
   } else if(activePeople.has(p)){
     activePeople.delete(p);
@@ -389,7 +383,6 @@ function render(day){
   document.getElementById('day-title').textContent = day;
   const cal = document.getElementById('cal');
 
-  // Time axis
   let axisHTML = `<div class="time-axis">`;
   for(let h=START; h<=END; h++){
     const lbl = h===12?'12p': h<12?h+'a':(h-12)+'p';
@@ -420,8 +413,9 @@ function render(day){
       let label='';
       if(durPx>=100) label=`${bl.c}<span class="bl-room">${bl.r}</span>`;
       else if(durPx>=48) label=bl.c;
+      const safeNote=(bl.note||'').replace(/'/g,"\\'");
       return `<div class="block" style="left:${px(bl.s)};width:${wpx(bl.s,bl.e)};height:${bh}px;background:${col.bg};color:${col.text};top:3px"
-        onclick="showPopup('${bl.c}','${bl.r}','${fmtH(bl.s)} – ${fmtH(bl.e)}','${bl.note||''}')">
+        onclick="showPopup('${bl.c}','${bl.r}','${fmtH(bl.s)} – ${fmtH(bl.e)}','${safeNote}')">
         <div class="bl-inner">${label}</div>
       </div>`;
     }).join('');
@@ -429,8 +423,9 @@ function render(day){
     bHTML += stacked.map(bl=>{
       const durPx=(bl.e-bl.s)*PX_HR;
       const label=durPx>=48?bl.c:'';
+      const safeNote=(bl.note||'').replace(/'/g,"\\'");
       return `<div class="block-async" style="left:${px(bl.s)};width:${wpx(bl.s,bl.e)};height:14px;top:${blockH+6}px"
-        onclick="showPopup('${bl.c}','${bl.r}','${fmtH(bl.s)} – ${fmtH(bl.e)}','${bl.note||''}')">
+        onclick="showPopup('${bl.c}','${bl.r}','${fmtH(bl.s)} – ${fmtH(bl.e)}','${safeNote}')">
         ${label}
       </div>`;
     }).join('');
@@ -450,7 +445,6 @@ function render(day){
 
   cal.innerHTML = `<div class="scroll-wrap"><div class="grid-inner" style="min-width:${TOTAL_PX+42}px">${axisHTML}${rowsHTML}</div></div>`;
 
-  // Mouse drag scroll
   const sw = cal.querySelector('.scroll-wrap');
   let isDown=false, startX=0, scrollLeft=0;
   sw.addEventListener('mousedown',e=>{isDown=true;startX=e.pageX-sw.offsetLeft;scrollLeft=sw.scrollLeft;});
@@ -461,8 +455,6 @@ function render(day){
 
 // Build legend
 const legEl = document.getElementById('legend');
-
-// ALL button
 const allBtn = document.createElement('div');
 allBtn.className = 'leg-all active';
 allBtn.id = 'leg-all';
@@ -470,7 +462,6 @@ allBtn.textContent = 'ALL';
 allBtn.onclick = toggleAll;
 legEl.appendChild(allBtn);
 
-// Per-person buttons
 PEOPLE.forEach(p => {
   const c = COLORS[p];
   const el = document.createElement('div');
@@ -483,7 +474,6 @@ PEOPLE.forEach(p => {
   legEl.appendChild(el);
 });
 
-// Build tabs
 const tabsEl = document.getElementById('tabs');
 DAYS.forEach(d => {
   const btn = document.createElement('button');
